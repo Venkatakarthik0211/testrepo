@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Planet{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1>Edit Planet</h1>
+    <form method="POST">
+        <div class="mb-3">
+            <label for="name" class="form-label">Name</label>
+            <input type="text" class="form-control" id="name" name="name" value="{{ planet.name }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="distance" class="form-label">Distance (AU)</label>
+            <input type="number" class="form-control" id="distance" name="distance" value="{{ planet.distance }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="radius" class="form-label">Radius (Earth radii)</label>
+            <input type="number" class="form-control" id="radius" name="radius" value="{{ planet.radius }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="mass" class="form-label">Mass (Earth masses)</label>
+            <input type="number" class="form-control" id="mass" name="mass" value="{{ planet.mass }}" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+    </form>
+</div>
+{% endblock %}

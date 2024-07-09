@@ -1,0 +1,30 @@
+-- Show all databases
+SHOW DATABASES;
+
+-- Create the database if it does not exist
+CREATE DATABASE IF NOT EXISTS PDB;
+
+-- Switch to the newly created or existing database
+USE PDB;
+
+-- Create the table if it does not exist
+CREATE TABLE IF NOT EXISTS planet (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL UNIQUE,
+    distance INT NOT NULL,
+    radius INT NOT NULL,
+    mass INT NOT NULL
+);
+
+-- Show all databases again (this step seems redundant but included as per the original query)
+SHOW DATABASES;
+
+-- Insert a new planet if it does not already exist
+INSERT INTO planet (name, distance, radius, mass)
+SELECT * FROM (SELECT 'Earth', 149600000, 6371, 5972) AS tmp
+WHERE NOT EXISTS (
+    SELECT name FROM planet WHERE name = 'Earth'
+) LIMIT 1;
+
+-- Select all records from the planet table
+SELECT * FROM planet;
