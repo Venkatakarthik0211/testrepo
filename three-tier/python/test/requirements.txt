@@ -9,8 +9,4 @@ Jinja2
 MarkupSafe
 mysqlclient
 SQLAlchemy
-<<<<<<< HEAD
 Werkzeug
-=======
-Werkzeug
->>>>>>> ee9167bd409e3b5f591937015392f9bcd50f0696
