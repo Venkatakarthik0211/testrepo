@@ -1,0 +1,43 @@
+  PrivateEC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t2.micro # Adjust instance type as needed
+      ImageId: ami-0b72821e2f351e396 # Specify your desired AMI ID
+      SubnetId: !Ref snappA # Place instance in the snwebA subnet
+      SecurityGroupIds:
+        - !Ref PrivateInstanceSecurityGroup # Reference to security group allowing ports 22 and 80
+      Tags:
+        - Key: Name
+          Value: PrivateEC2Instance
+
+  PrivateInstanceSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Enable SSH and HTTP access
+      VpcId: !Ref PythonVPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0 # Allow SSH from anywhere (adjust as needed)
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0 # Allow HTTP from anywhere (adjust as needed)
+      Tags:
+        - Key: Name
+          Value: PrivateInstanceSecurityGroup
+
+  PrivateRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref PythonVPC
+      Tags:
+        - Key: Name
+          Value: PrivateRouteTable
+
+  PrivateRoute:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId: !Ref PrivateRouteTable
+      DestinationCidrBlock: 0.0.0.0/0

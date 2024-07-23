@@ -1,0 +1,67 @@
+  NATEC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t2.micro # Adjust instance type as needed
+      ImageId: ami-0f5f51aa7a8ab4517 # Make Sure to use the correct NAT AMI, if not Create a new one
+      SubnetId: !Ref snwebA # Place instance in the snwebA subnet
+      SecurityGroupIds:
+        - !Ref InstanceSecurityGroup # Reference to security group allowing ports 22 and 80
+      NetworkInterfaces:
+        - AssociatePublicIpAddress: 'true'
+          DeviceIndex: '0'
+          DeleteOnTermination: 'true'
+          SubnetId: !Ref snwebA
+      Tags:
+        - Key: Name
+          Value: NATEC2Instance
+
+  InstanceSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Enable SSH and HTTP access
+      VpcId: !Ref PythonVPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0 # Allow SSH from anywhere (adjust as needed)
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0 # Allow HTTP from anywhere (adjust as needed)
+      Tags:
+        - Key: Name
+          Value: InstanceSecurityGroup
+
+  EC2InstanceInPrivateSubnet:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t2.micro
+      ImageId: ami-04a81a99f5ec58529
+      SubnetId: !Ref sndatabaseA # Choose one of your private subnets
+      SecurityGroupIds:
+        - !Ref InstanceSecurityGroup
+      Tags:
+        - Key: Name
+          Value: EC2InstanceInPrivateSubnet
+
+  PrivateRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref PythonVPC
+      Tags:
+        - Key: Name
+          Value: PrivateRouteTable
+
+  PrivateRoute:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId: !Ref PrivateRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      InstanceId: !Ref NATEC2Instance # Route traffic to the NAT instance
+
+  PrivateRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref sndatabaseA # Associate private subnet with private route table
+      RouteTableId: !Ref PrivateRouteTable
