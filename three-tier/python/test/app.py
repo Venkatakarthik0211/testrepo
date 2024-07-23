@@ -2,8 +2,14 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 import os
 
+db_password = os.getenv('DBPassword')
+db_user = os.getenv('DBUser')
+db_name = os.getenv('DBName')
+db_endpoint = os.getenv('DBEndpoint')
+
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI')
+# app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+pymysql://P4LUser:Admin%401234@localhost/pdb'
+app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+pymysql://{db_user}:{db_password}@{db_endpoint}/{db_name}'  # Update the connection string
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = 'mysecretkey'
 
