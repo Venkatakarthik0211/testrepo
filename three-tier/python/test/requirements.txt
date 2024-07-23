@@ -1,7 +1,7 @@
 click
 colorama
-Flask
-Flask-SQLAlchemy
+flask
+flask-sqlalchemy
 greenlet
 importlib-metadata
 itsdangerous
@@ -10,3 +10,4 @@ MarkupSafe
 mysqlclient
 SQLAlchemy
 Werkzeug
+pymysql
